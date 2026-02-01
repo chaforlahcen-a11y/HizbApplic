@@ -7,35 +7,31 @@ for (let i = 1; i <= 60; i++) {
   select.appendChild(o);
 }
 
-// حفظ حزب البداية
+// حفظ حزب البداية مع تاريخ البداية
 function saveStart() {
   const startHizb = parseInt(select.value);
   localStorage.setItem("startHizb", startHizb);
-  localStorage.setItem("morningHizb", startHizb);
-  localStorage.setItem("eveningHizb", startHizb);
-  localStorage.setItem("lastUsedDay", new Date().toDateString());
+  localStorage.setItem("startDate", new Date().toDateString());
   loadToday();
 }
 
 // الحصول على الحزب اليومي حسب الوقت
 function getHizb(time) {
   const start = parseInt(localStorage.getItem("startHizb") || 1);
-  const lastDay = localStorage.getItem("lastUsedDay");
-  const today = new Date().toDateString();
+  const startDateStr = localStorage.getItem("startDate") || new Date().toDateString();
 
-  let morning = parseInt(localStorage.getItem("morningHizb") || start);
-  let evening = parseInt(localStorage.getItem("eveningHizb") || start);
+  // حساب عدد الأيام منذ بداية الاستخدام
+  const startDate = new Date(startDateStr);
+  const today = new Date();
+  const diffDays = Math.floor((today - startDate) / (1000*60*60*24));
 
-  if (lastDay !== today) {
-    // يوم جديد → تحديث الأحزاب
-    morning = morning + 0; // صباح اليوم يبقى نفس الرقم
-    evening = evening + 1; // مساء اليوم يتقدم
-    if(evening > 60) evening = evening % 60;
+  // الحزب الصباحي = البداية + فرق الأيام
+  let morning = start + diffDays;
+  if(morning > 60) morning = ((morning - 1) % 60) + 1;
 
-    localStorage.setItem("morningHizb", morning);
-    localStorage.setItem("eveningHizb", evening);
-    localStorage.setItem("lastUsedDay", today);
-  }
+  // الحزب المسائي = الحزب الصباحي +1
+  let evening = morning + 1;
+  if(evening > 60) evening = ((evening - 1) % 60) + 1;
 
   return time === "morning" ? morning : evening;
 }
