@@ -20,7 +20,6 @@ function getHizb(time) {
   const start = parseInt(localStorage.getItem("startHizb") || 1);
   const startDateStr = localStorage.getItem("startDate") || new Date().toDateString();
 
-  // حساب عدد الأيام منذ بداية الاستخدام
   const startDate = new Date(startDateStr);
   const today = new Date();
   const diffDays = Math.floor((today - startDate) / (1000*60*60*24));
@@ -33,6 +32,7 @@ function getHizb(time) {
   let evening = morning + 1;
   if(evening > 60) evening = ((evening - 1) % 60) + 1;
 
+  // مباشرة نعيد الحزب حسب الوقت دون تخزينه
   return time === "morning" ? morning : evening;
 }
 
@@ -69,17 +69,14 @@ function readHizb(time) {
   const day = new Date().getDay();
   let title = "", text = "";
 
-  // صباح الجمعة
   if(time === "morning" && day === 5){
     title = "صباح الجمعة";
     text = "يس – الواقعة – تبارك";
   }
-  // مساء الخميس
   else if(time === "evening" && day === 4){
     title = "مساء الخميس";
     text = "سورة الكهف";
   }
-  // باقي الأيام
   else {
     const num = getHizb(time);
     title = "حزب " + num;
