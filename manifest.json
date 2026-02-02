@@ -1,0 +1,11 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "hizb daily",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "hzb",
+  "start_url": "/",
+  "theme_color": "#3f51b5"
+}
